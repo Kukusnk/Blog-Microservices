@@ -89,6 +89,20 @@ services:
     networks:
       - blog-network
 
+  auth-service:
+    build:
+      context: ../auth-service/  # Path to the directory containing Dockerfile (root of user-service project)
+      dockerfile: Dockerfile
+    container_name: auth-service
+    ports:
+      - "8086:8086"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/blog  # Connect to MongoDB container
+    depends_on:
+      - mongodb  # Ensure MongoDB starts before user-service
+    networks:
+      - blog-network
+
 volumes:
   mongodb_data:
 networks:
