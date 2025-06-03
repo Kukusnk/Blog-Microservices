@@ -1,0 +1,96 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=blog
+    networks:
+      - blog-network
+
+  eureka-server:
+    build:
+      context: ../eureka-server/  # Path to the eureka-server project directory
+      dockerfile: Dockerfile
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - blog-network
+
+  gateway-service:
+    build:
+      context: ../gateway-service/  # Path to the gateway-service project directory
+      dockerfile: Dockerfile
+    container_name: gateway-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - user-service
+      - post-service
+      - feed-service
+      - analytics-service
+    networks:
+      - blog-network
+
+  user-service:
+    build:
+      context: .  # Path to the directory containing Dockerfile (root of user-service project)
+      dockerfile: Dockerfile
+    container_name: user-service
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/blog  # Connect to MongoDB container
+    depends_on:
+      - mongodb  # Ensure MongoDB starts before user-service
+    networks:
+      - blog-network
+
+  post-service:
+    build:
+      context: ../post-service/  # Path to the gateway-service project directory
+      dockerfile: Dockerfile
+    container_name: post-service
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/blog
+    depends_on:
+      - mongodb
+    networks:
+      - blog-network
+
+  feed-service:
+    build:
+      context: ../feed-service/
+      dockerfile: Dockerfile
+    container_name: feed-service
+    ports:
+      - "8084:8084"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/blog
+    depends_on:
+      - mongodb
+    networks:
+      - blog-network
+
+  analytics-service:
+    build:
+      context: ../analytics-service/
+      dockerfile: Dockerfile
+    container_name: analytics-service
+    ports:
+      - "8085:8085"
+    networks:
+      - blog-network
+
+volumes:
+  mongodb_data:
+networks:
+  blog-network:
+    driver: bridge

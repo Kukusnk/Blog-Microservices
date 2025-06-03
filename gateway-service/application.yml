@@ -1,0 +1,26 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    config:
+      enabled: false
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      mvc:
+        routes:
+          - id: user-service
+            uri: lb://user-service
+            predicates:
+              - Path=/users/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/
+  instance:
+    hostname: gateway-service
