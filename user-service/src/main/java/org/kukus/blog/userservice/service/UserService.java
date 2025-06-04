@@ -49,26 +49,26 @@ public class UserService {
         return userDTOs;
     }
 
-    // Create a new user from UserCreateDTO
-    public UserDTO createUser(UserCreateDTO userCreateDTO) {
-        User user = new User();
-        user.setUsername(userCreateDTO.getUsername());
-        user.setEmail(userCreateDTO.getEmail());
-        user.setPassword(userCreateDTO.getPassword()); // In a real app, hash the password before saving
-        user.setCreatedAt(LocalDateTime.now());
-
-
-        User savedUser = userRepository.save(user);
-
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(savedUser.getId());
-        userDTO.setUsername(savedUser.getUsername());
-        userDTO.setEmail(savedUser.getEmail());
-        userDTO.setCreatedAt(savedUser.getCreatedAt());
-        userDTO.setFollowers(savedUser.getFollowers());
-
-        return userDTO;
-    }
+//    // Create a new user from UserCreateDTO
+//    public UserDTO createUser(UserCreateDTO userCreateDTO) {
+//        User user = new User();
+//        user.setUsername(userCreateDTO.getUsername());
+//        user.setEmail(userCreateDTO.getEmail());
+//        user.setPassword(userCreateDTO.getPassword()); // In a real app, hash the password before saving
+//        user.setCreatedAt(LocalDateTime.now());
+//
+//
+//        User savedUser = userRepository.save(user);
+//
+//        UserDTO userDTO = new UserDTO();
+//        userDTO.setId(savedUser.getId());
+//        userDTO.setUsername(savedUser.getUsername());
+//        userDTO.setEmail(savedUser.getEmail());
+//        userDTO.setCreatedAt(savedUser.getCreatedAt());
+//        userDTO.setFollowers(savedUser.getFollowers());
+//
+//        return userDTO;
+//    }
 
     // Find user by ID and return as UserDTO
     public UserDTO findUserById(String id) {

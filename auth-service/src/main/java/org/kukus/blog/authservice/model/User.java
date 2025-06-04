@@ -19,9 +19,11 @@ public class User {
     @Indexed(unique = true)
     private String email;
 
-    private String password; // будет храниться в зашифрованном виде
+    private String password;
 
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    private List<String> roles = new ArrayList<>();
 
     private List<String> followers = new ArrayList<>();
 }

@@ -22,6 +22,7 @@ public class User {
     private String password;// Hashed password
     private LocalDateTime createdAt; // Added field for account creation date
     private List<String> followers; // List of user IDs who follow this user
+    private List<String> roles = new ArrayList<>();
 
     // Constructor
     public User() {

@@ -1,9 +1,11 @@
 package org.kukus.blog.userservice.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.kukus.blog.userservice.dto.UserCreateDTO;
 import org.kukus.blog.userservice.dto.UserDTO;
 import org.kukus.blog.userservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,19 +36,19 @@ public class UserController {
     @PostMapping("/batch/ids")
     public ResponseEntity<Map<String, UserDTO>> getUser(@RequestBody Set<String> ids) {
         List<UserDTO> users = userService.getUsersByIds(ids);
-        
+
         Map<String, UserDTO> userMap = users.stream()
                 .collect(Collectors.toMap(UserDTO::getId, Function.identity()));
 
         return ResponseEntity.ok(userMap);
     }
 
-    // Create a new user
-    @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserCreateDTO userCreateDTO) {
-        UserDTO userDTO = userService.createUser(userCreateDTO);
-        return ResponseEntity.ok(userDTO);
-    }
+//    // Create a new user
+//    @PostMapping
+//    public ResponseEntity<UserDTO> createUser(@RequestBody UserCreateDTO userCreateDTO) {
+//        UserDTO userDTO = userService.createUser(userCreateDTO);
+//        return ResponseEntity.ok(userDTO);
+//    }
 
     // Get user by ID
     @GetMapping("/{id}")
@@ -66,5 +68,23 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(userDTO);
+    }
+
+    // Получение информации о текущем пользователе
+    @GetMapping("/me")
+    public ResponseEntity<String> getCurrentUser(HttpServletRequest request) {
+        String userName = (String) request.getAttribute("userName");
+        return ResponseEntity.ok("User Name: " + userName);
+    }
+
+    // Удаление пользователя (только для админов)
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable String id, HttpServletRequest request) {
+        List<String> roles = (List<String>) request.getAttribute("roles");
+        if (!roles.contains("ADMIN")) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Only admins can delete users");
+        }
+        // Здесь может быть логика удаления пользователя
+        return ResponseEntity.ok("User " + id + " deleted");
     }
 }

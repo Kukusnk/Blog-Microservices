@@ -1,6 +1,10 @@
 server:
   port: 8081
 
+jwt:
+  secret: my-secret-long-key-0123456789
+  expiration: 3600000
+
 spring:
   application:
     name: gateway-service
