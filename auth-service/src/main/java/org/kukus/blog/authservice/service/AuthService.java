@@ -39,10 +39,18 @@ public class AuthService {
     }
 
     public String login(LoginRequest request) {
+        System.out.println("EMAIL =================== "+request.getEmail());
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Invalid email, user not found"));
         logger.info("User found with username: {}", user.getUsername());
 
+        String userPassword = user.getPassword();
+        String requestPassword = passwordEncoder.encode(request.getPassword());
+
+        System.out.println("User: " + user);
+        System.out.println("Password request: " + requestPassword);
+        System.out.println("Password user: " + userPassword);
+        System.out.printf(userPassword.equals(requestPassword) ? "Password Match" : "Password Mismatch");
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Password does not match");
         }

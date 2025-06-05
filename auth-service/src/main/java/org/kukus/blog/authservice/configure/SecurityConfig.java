@@ -26,8 +26,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    //TODO JWT token
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

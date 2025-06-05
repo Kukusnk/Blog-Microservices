@@ -2,7 +2,7 @@ server:
   port: 8081
 
 jwt:
-  secret: my-secret-long-key-0123456789
+  secret: this_is_a_very_secure_and_long_secret_key_64_chars_minimum_which_is_supposed_to_be
   expiration: 3600000
 
 spring:

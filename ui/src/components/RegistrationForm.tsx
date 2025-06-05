@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { register } from './auth';
 
 interface UserCreateDTO {
     username: string;
@@ -7,51 +8,37 @@ interface UserCreateDTO {
 }
 
 const RegistrationForm: React.FC = () => {
-    // State for form fields
     const [formData, setFormData] = useState<UserCreateDTO>({
         username: '',
         email: '',
-        password: ''
+        password: '',
     });
     const [message, setMessage] = useState<string>('');
 
-    // Handle form input changes
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({
             ...formData,
-            [e.target.name]: e.target.value
+            [e.target.name]: e.target.value,
         });
     };
 
-    // Handle form submission
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://192.168.3.152:8081/users', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
-            if (response.ok) {
-                const data = await response.json();
-                setMessage(`User ${data.username} registered successfully!`);
-                setFormData({ username: '', email: '', password: '' }); // Clear form
-            } else {
-                setMessage('Registration failed. Please try again.');
-            }
+            await register(formData.username, formData.email, formData.password);
+            setMessage('Регистрация успешна!');
+            setFormData({ username: '', email: '', password: '' }); // Очищаем форму
         } catch (error) {
-            setMessage('Error: Could not connect to the server.');
+            setMessage('Ошибка при регистрации: ' + (error as Error).message);
         }
     };
 
     return (
         <div>
-            <h2>Register</h2>
+            <h2>Регистрация</h2>
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label>Username: </label>
+                    <label>Имя пользователя: </label>
                     <input
                         type="text"
                         name="username"
@@ -71,7 +58,7 @@ const RegistrationForm: React.FC = () => {
                     />
                 </div>
                 <div>
-                    <label>Password: </label>
+                    <label>Пароль: </label>
                     <input
                         type="password"
                         name="password"
@@ -80,7 +67,7 @@ const RegistrationForm: React.FC = () => {
                         required
                     />
                 </div>
-                <button type="submit">Register</button>
+                <button type="submit">Зарегистрироваться</button>
             </form>
             {message && <p>{message}</p>}
         </div>

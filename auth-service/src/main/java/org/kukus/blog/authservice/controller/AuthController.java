@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -25,7 +28,14 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody @Valid LoginRequest request) {
-        return ResponseEntity.ok(authService.login(request));
+    public ResponseEntity<Map<String, String>> login(@RequestBody @Valid LoginRequest request) {
+        Map<String, String> response = new HashMap<>();
+        response.put("token", authService.login(request));
+        return ResponseEntity.ok(response);
     }
 }
+
+//TODO
+//Токен недействителен (например, истёк срок действия или подпись не совпадает).
+//gateway-service не может проверить токен из-за несоответствия ключа подписи.
+//gateway-service перенаправляет запрос в user-service, но токен теряется или не передаётся.

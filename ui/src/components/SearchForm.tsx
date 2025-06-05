@@ -7,25 +7,24 @@ interface UserDTO {
 }
 
 const SearchForm: React.FC = () => {
-    // State for search input and result
     const [email, setEmail] = useState<string>('');
     const [user, setUser] = useState<UserDTO | null>(null);
     const [message, setMessage] = useState<string>('');
 
-    // Handle input change
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
     };
 
-    // Handle form submission
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await fetch(`http://192.168.3.152:8081/users/email/${email}`, {
+            const response = await fetch(`http://localhost:8081/users/email/${email}`, {
                 method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json'
-                }
+                    'Content-Type': 'application/json',
+                    // Добавляем токен, если он есть
+                    Authorization: `Bearer ${localStorage.getItem('jwtToken') || ''}`,
+                },
             });
             if (response.ok) {
                 const data: UserDTO = await response.json();
@@ -33,17 +32,17 @@ const SearchForm: React.FC = () => {
                 setMessage('');
             } else {
                 setUser(null);
-                setMessage('User not found.');
+                setMessage('Пользователь не найден.');
             }
         } catch (error) {
             setUser(null);
-            setMessage('Error: Could not connect to the server.');
+            setMessage('Ошибка: Не удалось подключиться к серверу.');
         }
     };
 
     return (
         <div>
-            <h2>Search User by Email</h2>
+            <h2>Поиск пользователя по Email</h2>
             <form onSubmit={handleSubmit}>
                 <div>
                     <label>Email: </label>
@@ -54,14 +53,14 @@ const SearchForm: React.FC = () => {
                         required
                     />
                 </div>
-                <button type="submit">Search</button>
+                <button type="submit">Поиск</button>
             </form>
             {message && <p>{message}</p>}
             {user && (
                 <div>
-                    <h3>User Found:</h3>
+                    <h3>Найденный пользователь:</h3>
                     <p>ID: {user.id}</p>
-                    <p>Username: {user.username}</p>
+                    <p>Имя: {user.username}</p>
                     <p>Email: {user.email}</p>
                 </div>
             )}
