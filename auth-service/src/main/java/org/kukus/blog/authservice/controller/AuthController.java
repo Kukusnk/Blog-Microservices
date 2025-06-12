@@ -34,8 +34,3 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 }
-
-//TODO
-//Токен недействителен (например, истёк срок действия или подпись не совпадает).
-//gateway-service не может проверить токен из-за несоответствия ключа подписи.
-//gateway-service перенаправляет запрос в user-service, но токен теряется или не передаётся.

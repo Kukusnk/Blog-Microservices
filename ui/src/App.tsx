@@ -26,6 +26,7 @@ import RegistrationForm from './components/RegistrationForm';
 import SearchForm from './components/SearchForm';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import LoginForm from "./components/LoginForm.tsx";
+import GetMe from "./components/GetMe.tsx";
 
 const App: React.FC = () => {
     return (
@@ -43,6 +44,9 @@ const App: React.FC = () => {
                         <li>
                             <Link to="/login">Login</Link>
                         </li>
+                        <li>
+                            <Link to="/getCurrentUser">Get Me</Link>
+                        </li>
                     </ul>
                 </nav>
 
@@ -50,6 +54,7 @@ const App: React.FC = () => {
                     <Route path="/register" element={<RegistrationForm />} />
                     <Route path="/search" element={<SearchForm />} />
                     <Route path="/login" element={<LoginForm />} />
+                    <Route path="/getCurrentUser" element={<GetMe />} />
                 </Routes>
             </div>
         </Router>

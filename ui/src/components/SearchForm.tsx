@@ -35,7 +35,7 @@ const SearchForm: React.FC = () => {
                 setMessage('Пользователь не найден.');
             }
         } catch (error) {
-            setUser(null);
+
             setMessage('Ошибка: Не удалось подключиться к серверу.');
         }
     };

@@ -41,7 +41,7 @@ public class JwtUtil {
     }
 
     // Validate and parse JWT token
-    public Claims validateToken(String token) {
+    public Claims getClaimsFromToken(String token) {
         return Jwts.parser()
                 .verifyWith(key)  // обязательно каст к SecretKey
                 .build()
@@ -49,13 +49,19 @@ public class JwtUtil {
                 .getPayload();
     }
 
+    public boolean validateToken(String authToken) {
+        return getClaimsFromToken(authToken)
+                .getExpiration()
+                .after(new Date());
+    }
+
     // Extract user ID from token
     public String getUserIdFromToken(String token) {
-        return validateToken(token).getSubject();
+        return getClaimsFromToken(token).getSubject();
     }
 
     // Extract roles from token
     public List<String> getRolesFromToken(String token) {
-        return validateToken(token).get("roles", List.class);
+        return getClaimsFromToken(token).get("roles", List.class);
     }
 }
